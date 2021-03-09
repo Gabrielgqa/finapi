@@ -70,6 +70,14 @@ app.put('/account', verifyIfExistsAccountCpf, (request, response) => {
   return response.status(201).send();
 });
 
+app.delete('/account', verifyIfExistsAccountCpf, (request, response) => {
+  const { customer } = request;
+
+  customers.splice(customer, 1);
+
+  return response.status(200).json(customers);
+});
+
 app.get('/statement', verifyIfExistsAccountCpf, (request, response) => {
   const { customer } = request;
 
@@ -122,6 +130,14 @@ app.post('/withdraw', verifyIfExistsAccountCpf, (request, response) => {
   customer.statement.push(statmentOperation);
 
   return response.status(201).send();
+});
+
+app.get('/balance', verifyIfExistsAccountCpf, (request, response) => {
+  const { customer } = request;
+
+  const balance = getBalance(customer.statement);
+
+  return response.json(balance);
 });
 
 app.listen(3333);
